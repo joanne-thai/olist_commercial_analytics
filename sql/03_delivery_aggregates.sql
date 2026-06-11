@@ -145,7 +145,7 @@ WITH order_grain AS (
 	SELECT DISTINCT order_id, customer_unique_id, order_purchase_timestamp, delivery_bucket
     FROM fact_orders
     WHERE customer_unique_id IS NOT NULL
-		AND order_purchase_timestamp iS NOT NULL
+		AND order_purchase_timestamp IS NOT NULL
         AND delivery_bucket IS NOT NULL
 ), 
 customer_orders AS (
