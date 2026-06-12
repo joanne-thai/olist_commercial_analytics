@@ -1,0 +1,5 @@
+first_delivery_bucket,customers,returning_customers,return_rate_pct,avg_orders_per_customer
+early,85749,2613,3.05,1.03
+on_time,1247,29,2.33,1.03
+late_1to3d,1820,43,2.36,1.03
+late_4plus,4542,116,2.55,1.03

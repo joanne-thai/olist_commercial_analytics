@@ -1,0 +1,9 @@
+segment,customers,avg_clv,median_clv,total_revenue,pct_customers,pct_revenue,revenue_index
+"New Customers",36224,164.34,108.2,5953007.74,38.8,38.6,0.99
+"Cannot Lose Them",14428,309.6,212.73,4466878.65,15.5,29,1.87
+Promising,12127,231.93,165.8,2812625.85,13,18.2,1.4
+Hibernating,22489,72.71,70.14,1635175.61,24.1,10.6,0.44
+"Needs Attention",7632,54.6,55,416693.97,8.2,2.7,0.33
+Champions,117,572.57,439.39,66990.67,0.1,0.4,4
+"Loyal Customers",111,437.46,310.86,48558.16,0.1,0.3,3
+"At Risk",230,97.96,102.2,22531.12,0.2,0.1,0.5
