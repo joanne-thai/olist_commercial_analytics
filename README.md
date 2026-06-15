@@ -1,8 +1,8 @@
 # Olist Marketplace: Customer and Commercial Analytics
-*A commercial deep-dive into a Brazilian e-commerce marketplace with 99K orders across 73 categories and 27 states, identifying retention, category, and operational priorities for merchandising and operations leadership.*
+*A commercial deep-dive into a Brazilian e-commerce marketplace with 96K delivered orders across 73 categories and 27 states, identifying retention, category, and operational priorities for merchandising and operations leadership.*
 
 ## Project Overview
-This project simulates a commercial analyst engagement for an e-commerce marketplace, using Olist's publicly available transaction data from September 2016 to August 2018. The project examines Olist's marketplace from four angles, including customer retention, category prioritisation, delivery operations, and operational drivers of repeat purchase. The analysis covers 99K delivered orders, 93K customers, and 27 Brazilian states. The outputs are a recommendations memo for marketplace leadership and a Power BI dashboard for ongoing monitoring. 
+This project simulates a commercial analyst engagement for an e-commerce marketplace, using Olist's publicly available transaction data from September 2016 to August 2018. The project examines Olist's marketplace from four angles, including customer retention, category prioritisation, delivery operations, and operational drivers of repeat purchase. The analysis covers 96K delivered orders, 93K customers, and 27 Brazilian states. The outputs are a recommendations memo for marketplace leadership and a Power BI dashboard for ongoing monitoring. 
 
 ## Key Findings
 - **35% of marketplace revenue sits in growing categories that are rated below average.** Four categories (bed_bath_table, watches_gifts, furniture_decor, office_furniture) carry the bulk of this exposure and represent the highest commercial leverage identified.
