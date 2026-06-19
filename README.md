@@ -36,7 +36,7 @@ The analysis proceeds in four phases:
 Each phase produces an aggregated table in MySQL, consumed by both the recommendations memo and the Power BI dashboard.
 
 ## Data Model
-The Olist dataset consists of nine related tables. `orders` sits at the centre, linking to  `customers` by `customer_id` and to `order_payments`, `order_reviews`, and `order_items` by `order_id`. Each row of `order_items` ties an order to its `products` (via `product_id`) and `sellers` (via `seller_id`), and `products` joins to `category_translation` in `product_category_name` to resolve English category names. 
+The Olist dataset consists of nine related tables. `orders` sits at the centre, linking to  `customers` by `customer_id` and to `order_payments`, `order_reviews`, and `order_items` by `order_id`. Each row of `order_items` ties an order to its `products` (via `product_id`) and `sellers` (via `seller_id`), and `products` joins to `category_translation` on `product_category_name` to resolve English category names. 
 
 ![Data model (ERD)](image/data_model.png)
 
@@ -207,7 +207,7 @@ olist_commercial_analytics/
 1. Run `01_setup_and_eda.ipynb` to load the 9 raw CSVs into MySQL.
 2. Execute `sql/01_fact_table.sql` in MySQL Workbench to build the `fact_orders` table.
 3. Run notebooks 02-04 in order. Each phase consumes the outputs of the previous and writes its own aggregated tables back to MySQL.
-4. Open the Power BI dashboard in `dashboards/` (TBD) to interact with the analytical outputs. 
+4. Open the Power BI dashboard in `dashboard/` to interact with the analytical outputs. 
 
 Estimated total runtime: ~5-10 minutes once dependencies are installed. 
 
@@ -228,7 +228,7 @@ A few honest caveats about this analysis:
 
 ## Contact
 Joanne Thai
-[joannethai.work@gmail.com]
-[www.linkedin.com/in/joannethaii]
+- Email: [joannethai.work@gmail.com](mailto:joannethai.work@gmail.com)
+- LinkedIn: [linkedin.com/in/joannethaii](https://www.linkedin.com/in/joannethaii)
 
 For data analyst roles, portfolio reviews, or general feedback on this project. 
