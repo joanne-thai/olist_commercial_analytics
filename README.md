@@ -7,11 +7,23 @@ This project simulates a commercial analyst engagement for an e-commerce marketp
 ## Key Findings
 - **35% of marketplace revenue sits in growing categories that are rated below average.** Four categories (bed_bath_table, watches_gifts, furniture_decor, office_furniture) carry the bulk of this exposure and represent the highest commercial leverage identified.
 
-- **Late delivery is fundamentally a carrier problem, not a seller problem.** Carrier transit accounts for 74% of customer wait time, and the gap between on-time and severely-late deliveries is driven entirely by this phase. 
+![Strategic Quadrant](image/scatter.png)
 
-- **Olist's customers do not punish lateness, they reward early delivery.** Repeat purchase rates lift 31% when first deliveries arrive early, but show no decline when they arrive late. 
+- **Late delivery is fundamentally a carrier problem, not a seller problem.** Carrier transit accounts for 74% of customer wait time, and the gap between on-time and severely-late deliveries is driven entirely by this phase.
+
+![Where the Delivery Wait Goes](image/decomposition_bar.png)
+
+When delivery is severely late, satisfaction collapses. Average review falls from 4.29 for early orders to 1.86 for orders 4+ days late.
+
+![Review Score by Delivery Experience](image/review_delivery.png)
+
+- **Olist's customers do not punish lateness; they reward early delivery.** Repeat purchase rates lift 31% when first deliveries arrive early, but show no decline when they arrive late.
+
+![Repeat Rate by First Delivery Experience](image/repeat_rate.png)
 
 - **The most valuable customer segment is now dormant.** 15.5% of customers who historically drove 29% of revenue currently sit in the "Cannot Lose Them" RFM segment with no active engagement.
+
+![Revenue by Customer Segment](image/revenue_segment.png)
 
 ## Methodology
 The analysis proceeds in four phases:
@@ -19,9 +31,12 @@ The analysis proceeds in four phases:
 1. **Data preparation**: 9 raw CSVs were loaded into MySQL via `pandas.to_sql`, then aggregated and joined into a `fact_orders` table using SQL. This table is the analytical foundation for all downstream notebooks. 
 2. **Customer analytics**: Customers are analysed through RFM segmentation, historic CLV, and cohort retention to identify the most valuable segment and the structural nature of repeat behaviour.
 3. **Category performance**: 73 categories are aggregated from `fact_orders` and compared on revenue growth (recent 6 months vs prior 6 months), then plotted as a strategic quadrant of growth versus customer satisfaction. 
-4. **Operations and experience**: Four sub-analyses examine delivery time decomposition, the review-score cost of late delivery, geographic patterns in customer experience, and the relationship between first-delivery and repeat purchase.
+4. **Operations and experience**: Four sub-analyses examine delivery time decomposition, the review-score cost of late delivery, geographic patterns in customer experience, and the relationship between first delivery and repeat purchase.
 
-Each phase produces aggregated table in MySQL, consumed by both the recommendations memo and the Power BI dashboard.
+Each phase produces an aggregated table in MySQL, consumed by both the recommendations memo and the Power BI dashboard.
+
+## Data Model
+
 
 ## Tech Stack
 - **Python (pandas, sqlalchemy, matplotlib, seaborn)**: Analytical work, statistical computations, and chart generation.
@@ -49,7 +64,7 @@ Each phase produces aggregated table in MySQL, consumed by both the recommendati
 
 2. Install Python dependencies:
 ```bash
-   pip installl -r requirements.txt
+   pip install -r requirements.txt
 ```
 
 3. Download the Olist dataset from Kaggle: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
