@@ -36,7 +36,92 @@ The analysis proceeds in four phases:
 Each phase produces an aggregated table in MySQL, consumed by both the recommendations memo and the Power BI dashboard.
 
 ## Data Model
+The Olist dataset consists of nine related tables. `orders` sits at the centre, linking to  `customers` by `customer_id` and to `order_payments`, `order_reviews`, and `order_items` by `order_id`. Each row of `order_items` ties an order to its `products` (via `product_id`) and `sellers` (via `seller_id`), and `products` joins to `category_translation` in `product_category_name` to resolve English category names. 
 
+![Data model (ERD)](image/data_model.png)
+
+*Olist source schema. Crow's-foot ends mark the "many" side of each relationship. `geolocation` is shown standalone because it links to `customers` and `sellers` only by `zip_code_prefix`, which is not a unique key.*
+
+These nine tables are joined and flattened into a single `fact_orders` table at order-item grain, filtered to delivered orders, which becomes the analytical foundation for every notebook and the aggregated tables behind the dashboard. That build is shown in the [Data Flow](#data-flow) section below. 
+
+## Data Flow
+
+The nine raw CSVs are loaded into MySQL and joined into a single denormalised `fact_orders` table at order-item grain, filtered to delivered orders. SQL and Python then build purpose-built aggregate tables from `fact_orders`, one per analysis, which feed the four pages of the Power BI dashboard.
+
+```mermaid
+%%{init: {'flowchart': {'curve': 'linear'}}}%%
+flowchart LR
+    subgraph RAW["Raw source tables (9 CSVs in MySQL)"]
+        O[olist_orders]
+        OI[olist_order_items]
+        C[olist_customers]
+        S[olist_sellers]
+        P[olist_products]
+        PAY[olist_order_payments]
+        R[olist_order_reviews]
+        G[olist_geolocation]
+        T[category_name_translation]
+    end
+
+    FACT["fact_orders<br/>delivered orders, item grain"]
+
+    O --> FACT
+    OI --> FACT
+    C --> FACT
+    S --> FACT
+    P --> FACT
+    PAY --> FACT
+    R --> FACT
+    G --> FACT
+    T --> FACT
+
+    subgraph AGG["Aggregate tables (SQL + Python)"]
+        RFM[dim_customer_rfm]
+        SEG[agg_segment_clv]
+        COH[agg_cohort_retention]
+        ACQ[agg_cohort_sizes]
+        CAT[agg_category_performance]
+        DEC[agg_delivery_decomposition]
+        STATE[agg_state_performance]
+        BUCK[agg_review_by_delivery_bucket]
+        REP[agg_repeat_by_first_delivery]
+        KPI[agg_marketplace_kpis]
+    end
+
+    FACT --> RFM & SEG & COH & ACQ & CAT & DEC & STATE & BUCK & REP & KPI
+
+    subgraph DASH["Power BI dashboard"]
+        P1[Overview]
+        P2[Customer Lens]
+        P3[Category Performance]
+        P4[Operations and Experience]
+    end
+
+    KPI --> P1
+    ACQ --> P1
+    CAT --> P1 & P3
+    RFM --> P2
+    SEG --> P2
+    COH --> P2
+    DEC --> P4
+    STATE --> P4
+    BUCK --> P4
+    REP --> P4
+
+    classDef raw fill:#E2E8F0,stroke:#94A3B8,color:#0F172A;
+    classDef fact fill:#1E40AF,stroke:#1E3A8A,color:#FFFFFF;
+    classDef agg fill:#DBEAFE,stroke:#60A5FA,color:#0F172A;
+    classDef dash fill:#14B8A6,stroke:#0F766E,color:#FFFFFF;
+
+    class O,OI,C,S,P,PAY,R,G,T raw;
+    class FACT fact;
+    class RFM,SEG,COH,ACQ,CAT,DEC,STATE,BUCK,REP,KPI agg;
+    class P1,P2,P3,P4 dash;
+
+    style RAW fill:#F9F9F9,stroke:#CBD5E1;
+    style AGG fill:#F9F9F9,stroke:#CBD5E1;
+    style DASH fill:#F9F9F9,stroke:#CBD5E1;
+```
 
 ## Tech Stack
 - **Python (pandas, sqlalchemy, matplotlib, seaborn)**: Analytical work, statistical computations, and chart generation.
@@ -44,6 +129,46 @@ Each phase produces an aggregated table in MySQL, consumed by both the recommend
 - **MySQL Workbench**: SQL development with autocomplete, query inspection, and result preview.
 - **Power BI**: Interactive dashboard consuming the MySQL aggregated tables for marketplace monitoring.
 - **Jupyter Lab**: Development environment for notebooks 01-04.
+
+## Repository Structure
+
+```text
+olist_commercial_analytics/
+├── README.md
+├── requirements.txt
+├── metric_reconciliation.md               # canonical-value decisions for dual metrics
+│
+├── 01_sql_fact_table.ipynb                # load raw CSVs to MySQL, build fact_orders
+├── 02_customer_analytics.ipynb            # RFM, historic CLV, cohort retention
+├── 03_category_performance.ipynb          # category growth vs review quadrant
+├── 04_operations_experience.ipynb         # delivery, reviews, geography, repeat purchase
+│
+├── sql/
+│   ├── 01_fact_table.sql
+│   ├── 02_category_aggregates.sql
+│   └── 03_delivery_aggregates.sql
+│
+├── data/
+│   ├── raw/                               # 9 source CSVs from Kaggle
+│   └── processed/
+│       ├── fact_orders.parquet            # central fact table (+ .csv)
+│       ├── rfm_segments.parquet           # customer-level RFM (+ .csv)
+│       ├── rfm_clv.parquet                # RFM + historic CLV (+ .csv)
+│       ├── category_full.parquet
+│       ├── cohort_retention.csv
+│       └── dashboard_inputs/              # 9 aggregate tables feeding Power BI
+│
+├── dashboard/
+│   └── olist_dashboard.pbix               # 4-page Power BI dashboard
+│
+├── report/
+│   └── commercial_recommendations.md      # recommendations memo
+│
+├── image/                                 # dashboard screenshots + ERD used in README
+│
+└── archive/
+    └── 01_setup_and_eda_pandas_only.ipynb # superseded pandas-only EDA
+```
 
 ## How to Run
 ### Requirements
